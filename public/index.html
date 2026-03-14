@@ -8,9 +8,9 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', sans-serif; background: #F5F4F1; color: #121212; min-height: 100vh; }
-  .layout { display: flex; min-height: 100vh; }
 
-  /* SIDEBAR */
+  /* ── LAYOUT ── */
+  .layout { display: flex; min-height: 100vh; }
   .sidebar { width: 200px; min-height: 100vh; background: #F5F4F0; border-right: 1px solid #e2e1dc; padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; }
   .logo { font-size: 16px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.5px; }
   .logo span { color: #CB4810; }
@@ -18,243 +18,327 @@
   .nav-item:hover { background: #EBEAE7; }
   .nav-item.active { background: #E2E1DC; color: #121212; font-weight: 600; }
   .nav-item svg { width: 14px; height: 14px; flex-shrink: 0; }
-
   .main { flex: 1; }
   .page { display: none; }
   .page.active { display: block; }
 
-  /* SETUP */
+  /* ── SETUP ── */
   .setup-layout { display: flex; min-height: 100vh; }
   .setup-left { flex: 3; padding: 28px 24px; }
   .setup-right { flex: 2; background: #F5F4F0; border-left: 1px solid #e2e1dc; padding: 24px 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
   .setup-title { font-size: 26px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.5px; }
-
   .card { background: #FAFAF8; border-radius: 16px; padding: 20px; margin-bottom: 14px; }
   .card-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; }
-
-  .field-label { font-size: 12px; color: #666; margin-bottom: 6px; display: block; }
   .field-input { width: 100%; padding: 11px 13px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; background: white; color: #121212; margin-bottom: 8px; transition: border-color 0.2s; }
   .field-input:focus { border-color: #333; }
   .field-hint { font-size: 12px; color: #888; line-height: 1.5; }
-
   .instr-toggle { font-size: 12px; color: #CB4810; background: none; border: none; cursor: pointer; padding: 0; margin-top: 10px; font-family: inherit; display: block; }
-  .instr-body { display: none; margin-top: 10px; font-size: 12px; color: #555; line-height: 1.9; padding-left: 2px; }
+  .instr-body { display: none; margin-top: 10px; font-size: 12px; color: #555; line-height: 1.9; }
   .instr-body.open { display: block; }
-
   .divider { height: 1px; background: #e2e1dc; margin: 14px 0; }
-
   .toggle-row { display: flex; align-items: center; gap: 10px; }
   .toggle-btn { position: relative; width: 36px; height: 20px; background: #C8C7C4; border-radius: 10px; border: none; cursor: pointer; flex-shrink: 0; transition: background 0.25s; padding: 0; }
   .toggle-btn.on { background: #CB4810; }
   .toggle-knob { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: transform 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); display: block; pointer-events: none; }
   .toggle-btn.on .toggle-knob { transform: translateX(16px); }
   .toggle-label { font-size: 13px; font-weight: 500; color: #333; }
-
   .step { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #555; margin-bottom: 10px; line-height: 1.5; }
   .step-num { width: 22px; height: 22px; min-width: 22px; background: #272522; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
-
   .submit-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: #272522; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; margin-top: 4px; }
   .submit-btn:hover:not(:disabled) { background: #000; }
   .submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-
   .error-msg { color: #CB4810; font-size: 13px; margin-bottom: 12px; line-height: 1.5; }
 
-  /* PREVIEW PANEL */
+  /* ── PREVIEW PANEL ── */
   .preview-label { font-size: 11px; font-weight: 700; color: #aaa; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
-  .preview-box { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e2e1dc; margin-bottom: 20px; }
+  .preview-box { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e2e1dc; margin-bottom: 16px; }
   .preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #e0e0e0; }
   .preview-cell { aspect-ratio: 1; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #bbb; overflow: hidden; }
   .preview-cell img { width: 100%; height: 100%; object-fit: cover; }
   .preview-footer { padding: 10px 12px; font-size: 11px; color: #888; border-top: 1px solid #f0f0f0; }
 
+  /* Copy URL box */
+  .copy-box { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 10px 12px; margin-bottom: 16px; }
+  .copy-url { font-size: 11px; color: #444; flex: 1; word-break: break-all; font-family: monospace; }
+  .copy-btn { padding: 5px 12px; background: #272522; color: white; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; }
+  .copy-btn:hover { background: #000; }
+
   .notion-steps-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
   .notion-step { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #555; margin-bottom: 8px; line-height: 1.5; }
 
-  /* FEED PAGE */
+  /* ── FEED ── */
   .feed-header { background: white; border-bottom: 1px solid #efefef; padding: 6px 4px; }
   .feed-header-inner { max-width: 750px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-
   .refresh-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #333; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: inherit; transition: background 0.2s; }
   .refresh-btn:hover:not(:disabled) { background: #555; }
   .refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-  .btn-ghost { background: #f1f1f1; color: #333; font-size: 12px; }
+  .btn-ghost { background: #f1f1f1; color: #333; font-size: 12px; text-decoration: none; }
   .btn-ghost:hover { background: #e0e0e0; }
 
   .feed-container { max-width: 750px; margin: 0 auto; padding: 0 4px; position: relative; }
   .feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #e0e0e0; }
-
   .grid-item { aspect-ratio: 4/5; position: relative; overflow: hidden; background: #e8e8e8; cursor: pointer; }
   .grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s; display: block; }
   .grid-item:hover img { transform: scale(1.03); }
-
   .title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 8px; transform: translateY(100%); transition: transform 0.3s; }
   .grid-item:hover .title-overlay { transform: translateY(0); }
   .overlay-date { font-size: 11px; color: #ccc; margin-bottom: 2px; }
   .overlay-name { font-size: 12px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
   .no-content { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #aaa; }
-
   .gradient-footer { position: absolute; bottom: 0; left: 0; right: 0; height: calc(25% + 1px); background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0)); display: flex; align-items: flex-end; justify-content: center; padding: 10px; pointer-events: none; }
   .powered { font-size: 12px; color: #333; background: white; padding: 6px 12px; border-radius: 100px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 
   .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 12px; color: #999; font-size: 14px; }
   .spinner { width: 26px; height: 26px; border: 2px solid #e0e0e0; border-top-color: #333; border-radius: 50%; animation: spin 0.8s linear infinite; }
-  .spin-sm { width: 14px; height: 14px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; }
+  .spin-sm { width: 14px; height: 14px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
-<div class="layout">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo">feed<span>·</span>preview</div>
-    <button class="nav-item active" id="nav-setup" onclick="showPage('setup')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      Setup
-    </button>
-    <button class="nav-item" id="nav-feed" onclick="showPage('feed')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-      Feed Preview
-    </button>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- SETUP PAGE -->
-    <div class="page active" id="page-setup">
-      <div class="setup-layout">
-        <div class="setup-left">
-          <h1 class="setup-title">Widget Setup</h1>
-
-          <div class="card">
-            <div class="card-title">🔐 Notion Integration Token</div>
-            <input class="field-input" id="tokenInput" type="text" placeholder="ntn_...">
-            <div class="field-hint">Copy the token from your integration's page. Create the integration once, reuse the token for all widgets.</div>
-            <button class="instr-toggle" onclick="toggleInstr(this)">+ Show Instructions</button>
-            <div class="instr-body">
-              1. Go to notion.so/profile/integrations<br>
-              2. Click "New integration" → pick Internal<br>
-              3. Name it anything (e.g. "Feed Preview")<br>
-              4. Save and copy the Integration Token shown
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">🔌 Connect integration with database</div>
-            <div class="step"><span class="step-num">1</span>Open your database in Notion. Click ··· icon in top-right</div>
-            <div class="step"><span class="step-num">2</span>Select "Connections" → "Add connection" → choose your integration</div>
-            <div class="divider"></div>
-            <div class="toggle-row">
-              <button class="toggle-btn" id="toggleBtn" onclick="toggleConfirm()">
-                <span class="toggle-knob"></span>
-              </button>
-              <span class="toggle-label">Yes, I've completed the steps above</span>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">🔗 Database URL</div>
-            <input class="field-input" id="dbInput" type="text" placeholder="https://www.notion.so/workspace/...">
-            <div class="field-hint">Paste the full link of your Notion database. Get it from the database page → Share → Copy link.</div>
-            <button class="instr-toggle" onclick="toggleInstr(this)">+ Show Instructions</button>
-            <div class="instr-body">
-              1. Open your Content Calendar database in Notion<br>
-              2. Click Share → Copy link<br>
-              3. Paste the full URL above
-            </div>
-          </div>
-
-          <div id="errMsg" class="error-msg" style="display:none;"></div>
-
-          <button class="submit-btn" id="submitBtn" onclick="createWidget()" disabled>
-            Create Feed Widget
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </button>
-        </div>
-
-        <!-- RIGHT PANEL -->
-        <div class="setup-right">
-          <div class="preview-label">Live Preview</div>
-          <div class="preview-box">
-            <div class="preview-grid" id="previewGrid">
-              <div class="preview-cell">No Content</div>
-              <div class="preview-cell">No Content</div>
-              <div class="preview-cell">No Content</div>
-              <div class="preview-cell">No Content</div>
-              <div class="preview-cell">No Content</div>
-              <div class="preview-cell">No Content</div>
-            </div>
-            <div class="preview-footer">✨ Hecho por laakeshu ✨</div>
-          </div>
-
-          <div id="notionSteps" style="display:none;">
-            <div class="notion-steps-title" style="margin-bottom:10px;">Copy Your Widget URL</div>
-            <div style="display:flex;align-items:center;gap:8px;background:white;border:1px solid #e0e0e0;border-radius:10px;padding:10px 12px;margin-bottom:20px;">
-              <span id="widgetUrl" style="font-size:12px;color:#444;flex:1;word-break:break-all;font-family:monospace;"></span>
-              <button onclick="copyWidgetUrl()" style="padding:5px 12px;background:#272522;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit;" id="copyBtn">Copy</button>
-            </div>
-            <div class="notion-steps-title" style="margin-bottom:10px;">Add to Your Notion Page</div>
-            <div class="notion-step"><span class="step-num">1</span>Type <strong>/embed</strong> in Notion</div>
-            <div class="notion-step"><span class="step-num">2</span>Click "Embed link"</div>
-            <div class="notion-step"><span class="step-num">3</span>Paste your widget URL</div>
-            <div class="notion-step"><span class="step-num">4</span>Click "Create embed"</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FEED PAGE -->
-    <div class="page" id="page-feed">
-      <div class="feed-header">
-        <div class="feed-header-inner">
-          <button class="refresh-btn" id="rbtn" onclick="handleRefresh()">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clip-rule="evenodd"/></svg>
-            Refresh
-          </button>
-          <button class="refresh-btn btn-ghost" onclick="showPage('setup')">⚙ Setup</button>
-        </div>
-      </div>
-      <div style="height:1px; background:#efefef;"></div>
-      <div id="feedContent" class="feed-container">
-        <div class="loading"><div class="spinner"></div>Loading your feed...</div>
-      </div>
-    </div>
-
-  </main>
-</div>
+<div id="root"></div>
 
 <script>
+// ── HELPERS ──
 function extractDbId(input) {
-  // Strip dashes and whitespace
+  if (!input) return '';
   const clean = input.trim().replace(/-/g, '');
-  // Match any 32-char hex string (Notion IDs)
   const m = clean.match(/([a-f0-9]{32})/i);
-  if (m) return m[1];
-  return '';
+  return m ? m[1] : '';
 }
 
+function fmt(d) {
+  if (!d) return '';
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+// ── STATE ──
 const TOKEN_KEY = 'feed_token';
 const DB_KEY = 'feed_db';
-let confirmed = false;
-
-// Read token + dbId from URL params first, then localStorage
 const urlParams = new URLSearchParams(window.location.search);
-const urlToken = urlParams.get('token');
-const urlDb = urlParams.get('db');
+const embedMode = urlParams.get('embed') === '1';
+const urlToken = urlParams.get('token') || '';
+const urlDb = urlParams.get('db') || '';
 
 let token = urlToken || localStorage.getItem(TOKEN_KEY) || '';
 let dbId = urlDb ? extractDbId(urlDb) : (localStorage.getItem(DB_KEY) || '');
+let confirmed = false;
 
-// Save to localStorage if coming from URL
 if (urlToken) localStorage.setItem(TOKEN_KEY, urlToken);
 if (urlDb) localStorage.setItem(DB_KEY, extractDbId(urlDb));
 
-// Pre-fill saved values
-if (token) document.getElementById('tokenInput').value = token;
-if (dbId) document.getElementById('dbInput').value = urlDb || dbId;
+// ── API CALL ──
+async function callApi(t, d, limit) {
+  const res = await fetch('/api/notion', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: t, dbId: d, limit })
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Server error ' + res.status);
+  }
+  const data = await res.json();
+  return data.posts;
+}
 
+// ── FEED RENDER ──
+async function loadFeed() {
+  const el = document.getElementById('feedContent');
+  if (!el) return;
+  if (!token || !dbId) {
+    el.innerHTML = '<div style="padding:24px;color:#CB4810;font-size:14px;">⚠️ Missing token or database. Use the setup page to generate your embed link.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="loading"><div class="spinner"></div>Loading your feed...</div>';
+  try {
+    const posts = await callApi(token, dbId, 18);
+    const cells = Array.from({ length: 18 }, (_, i) => {
+      const p = posts[i];
+      if (!p || (!p.img && !p.name)) return `<div class="grid-item"><div class="no-content">No Content</div></div>`;
+      return `<div class="grid-item" onclick="window.open('https://www.notion.so/${(p.id||'').replace(/-/g,'')}','_blank')">
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=no-content>No Content</div>'">` : `<div class="no-content">${p.name}</div>`}
+        <div class="title-overlay">
+          ${p.date ? `<div class="overlay-date">${fmt(p.date)}</div>` : ''}
+          <div class="overlay-name">${p.name}</div>
+        </div>
+      </div>`;
+    }).join('');
+    el.innerHTML = `<div style="position:relative;">
+      <div class="feed-grid">${cells}</div>
+      <div class="gradient-footer"><span class="powered">✨ Hecho por laakeshu ✨</span></div>
+    </div>`;
+  } catch(e) {
+    el.innerHTML = `<div style="padding:24px;color:#CB4810;font-size:14px;">⚠️ ${e.message}</div>`;
+  }
+}
+
+async function handleRefresh(btnId) {
+  const btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spin-sm"></div> Refresh'; }
+  await loadFeed();
+  if (btn) { btn.disabled = false; btn.innerHTML = refreshIcon() + ' Refresh'; }
+}
+
+function refreshIcon() {
+  return '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clip-rule="evenodd"/></svg>';
+}
+
+function settingsIcon() {
+  return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+}
+
+// ── EMBED MODE ── (only feed + header with Refresh + Settings)
+if (embedMode) {
+  document.getElementById('root').innerHTML = `
+    <div style="background:white; min-height:100vh;">
+      <div class="feed-header">
+        <div class="feed-header-inner">
+          <button class="refresh-btn" id="embedRefreshBtn" onclick="handleRefresh('embedRefreshBtn')">
+            ${refreshIcon()} Refresh
+          </button>
+          <a href="${window.location.origin}" target="_blank" class="refresh-btn btn-ghost" style="display:flex;align-items:center;gap:4px;">
+            ${settingsIcon()} Ajustes
+          </a>
+        </div>
+      </div>
+      <div style="height:1px;background:#efefef;"></div>
+      <div id="feedContent" class="feed-container">
+        <div class="loading"><div class="spinner"></div>Loading...</div>
+      </div>
+    </div>`;
+  loadFeed();
+
+} else {
+  // ── FULL MODE ── (sidebar + setup + feed pages)
+  document.getElementById('root').innerHTML = `
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="logo">feed<span>·</span>preview</div>
+        <button class="nav-item active" id="nav-setup" onclick="showPage('setup')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Setup
+        </button>
+        <button class="nav-item" id="nav-feed" onclick="showPage('feed')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          Feed Preview
+        </button>
+      </aside>
+      <main class="main">
+
+        <div class="page active" id="page-setup">
+          <div class="setup-layout">
+            <div class="setup-left">
+              <h1 class="setup-title">Widget Setup</h1>
+
+              <div class="card">
+                <div class="card-title">🔐 Notion Integration Token</div>
+                <input class="field-input" id="tokenInput" type="text" placeholder="ntn_...">
+                <div class="field-hint">Copy the token from your integration's page at notion.so/profile/integrations</div>
+                <button class="instr-toggle" onclick="toggleInstr(this)">+ Show Instructions</button>
+                <div class="instr-body">
+                  1. Go to notion.so/profile/integrations<br>
+                  2. Click "New integration" → pick Internal<br>
+                  3. Name it anything (e.g. "Feed Preview")<br>
+                  4. Save and copy the Integration Token shown
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-title">🔌 Connect integration with database</div>
+                <div class="step"><span class="step-num">1</span>Open your database in Notion. Click ··· icon in top-right</div>
+                <div class="step"><span class="step-num">2</span>Select "Connections" → "Add connection" → choose your integration</div>
+                <div class="divider"></div>
+                <div class="toggle-row">
+                  <button class="toggle-btn" id="toggleBtn" onclick="toggleConfirm()">
+                    <span class="toggle-knob"></span>
+                  </button>
+                  <span class="toggle-label">Yes, I've completed the steps above</span>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-title">🔗 Database URL</div>
+                <input class="field-input" id="dbInput" type="text" placeholder="https://www.notion.so/workspace/...">
+                <div class="field-hint">Paste the full link of your Notion database. Get it from Share → Copy link.</div>
+                <button class="instr-toggle" onclick="toggleInstr(this)">+ Show Instructions</button>
+                <div class="instr-body">
+                  1. Open your Content Calendar database in Notion<br>
+                  2. Click Share → Copy link<br>
+                  3. Paste the full URL above
+                </div>
+              </div>
+
+              <div id="errMsg" class="error-msg" style="display:none;"></div>
+
+              <button class="submit-btn" id="submitBtn" onclick="createWidget()" disabled>
+                Create Feed Widget
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </button>
+            </div>
+
+            <div class="setup-right">
+              <div class="preview-label">Live Preview</div>
+              <div class="preview-box">
+                <div class="preview-grid" id="previewGrid">
+                  <div class="preview-cell">No Content</div>
+                  <div class="preview-cell">No Content</div>
+                  <div class="preview-cell">No Content</div>
+                  <div class="preview-cell">No Content</div>
+                  <div class="preview-cell">No Content</div>
+                  <div class="preview-cell">No Content</div>
+                </div>
+                <div class="preview-footer">✨ Hecho por laakeshu ✨</div>
+              </div>
+
+              <div id="notionSteps" style="display:none;">
+                <div class="notion-steps-title">Copy Your Widget URL</div>
+                <div class="copy-box">
+                  <span class="copy-url" id="widgetUrl"></span>
+                  <button class="copy-btn" id="copyBtn" onclick="copyWidgetUrl()">Copy</button>
+                </div>
+                <div class="notion-steps-title">Add to Your Notion Page</div>
+                <div class="notion-step"><span class="step-num">1</span>Type <strong>/embed</strong> in Notion</div>
+                <div class="notion-step"><span class="step-num">2</span>Click "Embed link"</div>
+                <div class="notion-step"><span class="step-num">3</span>Paste your widget URL</div>
+                <div class="notion-step"><span class="step-num">4</span>Click "Create embed"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" id="page-feed">
+          <div class="feed-header">
+            <div class="feed-header-inner">
+              <button class="refresh-btn" id="feedRefreshBtn" onclick="handleRefresh('feedRefreshBtn')">
+                ${refreshIcon()} Refresh
+              </button>
+              <button class="refresh-btn btn-ghost" onclick="showPage('setup')" style="display:flex;align-items:center;gap:4px;">
+                ${settingsIcon()} Ajustes
+              </button>
+            </div>
+          </div>
+          <div style="height:1px;background:#efefef;"></div>
+          <div id="feedContent" class="feed-container">
+            <div class="loading"><div class="spinner"></div>Loading your feed...</div>
+          </div>
+        </div>
+
+      </main>
+    </div>`;
+
+  // Pre-fill saved values
+  if (token) document.getElementById('tokenInput').value = token;
+  if (dbId) document.getElementById('dbInput').value = dbId;
+
+  // Init nav
+  document.getElementById('tokenInput').addEventListener('input', checkReady);
+  document.getElementById('dbInput').addEventListener('input', checkReady);
+
+  if (token && dbId) showPage('feed');
+  else showPage('setup');
+}
+
+// ── SETUP FUNCTIONS ──
 function toggleInstr(btn) {
   const d = btn.nextElementSibling;
   d.classList.toggle('open');
@@ -272,32 +356,7 @@ function checkReady() {
   const t = document.getElementById('tokenInput').value.trim();
   const d = document.getElementById('dbInput').value.trim();
   const btn = document.getElementById('submitBtn');
-  const ready = t && d && confirmed;
-  btn.disabled = !ready;
-}
-
-document.getElementById('tokenInput').addEventListener('input', checkReady);
-document.getElementById('dbInput').addEventListener('input', checkReady);
-
-
-function fmt(d) {
-  if (!d) return '';
-  return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-}
-
-// ── KEY CHANGE: calls /api/notion on own server instead of Notion directly ──
-async function callApi(t, d, limit) {
-  const res = await fetch('/api/notion', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: t, dbId: d, limit })
-  });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || `Server error ${res.status}`);
-  }
-  const data = await res.json();
-  return data.posts;
+  btn.disabled = !(t && d && confirmed);
 }
 
 async function createWidget() {
@@ -308,12 +367,13 @@ async function createWidget() {
   err.style.display = 'none';
 
   if (!d) {
-    err.textContent = '⚠️ Could not find a valid Database ID in the URL. Make sure you paste the full Notion database link.';
+    err.textContent = '⚠️ Could not find a valid Database ID. Make sure you paste the full Notion database URL.';
     err.style.display = 'block';
     return;
   }
 
-  token = t; dbId = d;
+  token = t;
+  dbId = d;
   localStorage.setItem(TOKEN_KEY, t);
   localStorage.setItem(DB_KEY, d);
 
@@ -330,10 +390,11 @@ async function createWidget() {
       return `<div class="preview-cell"><img src="${p.img}" loading="lazy"></div>`;
     }).join('');
 
-    document.getElementById('notionSteps').style.display = 'block';
-    // Generate personalised widget URL with token + db as params
+    // Generate embed URL
     const widgetUrl = window.location.origin + '?token=' + encodeURIComponent(t) + '&db=' + encodeURIComponent(d) + '&embed=1';
     document.getElementById('widgetUrl').textContent = widgetUrl;
+    document.getElementById('notionSteps').style.display = 'block';
+
     btn.textContent = '✓ Widget Created!';
     btn.style.background = '#2d6a2d';
   } catch(e) {
@@ -354,95 +415,12 @@ function copyWidgetUrl() {
   });
 }
 
-async function loadFeed() {
-  if (!token || !dbId) {
-    document.getElementById('feedContent').innerHTML = '<div class="loading" style="color:#CB4810;">⚠️ Complete Setup first.</div>';
-    return;
-  }
-  document.getElementById('feedContent').innerHTML = '<div class="loading"><div class="spinner"></div>Loading your feed...</div>';
-
-  try {
-    const posts = await callApi(token, dbId, 18);
-    const cells = Array.from({ length: 18 }, (_, i) => {
-      const p = posts[i];
-      if (!p || (!p.img && !p.name)) return `<div class="grid-item"><div class="no-content">No Content</div></div>`;
-      return `<div class="grid-item" onclick="window.open('https://www.notion.so/${p.id ? p.id.replace(/-/g,'') : ''}','_blank')">
-        ${p.img
-          ? `<img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=no-content>No Content</div>'">`
-          : `<div class="no-content">${p.name}</div>`}
-        <div class="title-overlay">
-          ${p.date ? `<div class="overlay-date">${fmt(p.date)}</div>` : ''}
-          <div class="overlay-name">${p.name}</div>
-        </div>
-      </div>`;
-    }).join('');
-
-    document.getElementById('feedContent').innerHTML = `
-      <div style="position:relative;">
-        <div class="feed-grid">${cells}</div>
-        <div class="gradient-footer">
-          <span class="powered">✨ Hecho por laakeshu ✨</span>
-        </div>
-      </div>`;
-  } catch(e) {
-    document.getElementById('feedContent').innerHTML = `<div style="padding:24px; color:#CB4810; font-size:14px;">⚠️ ${e.message}</div>`;
-  }
-}
-
-async function handleRefresh() {
-  const btn = document.getElementById('rbtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin-sm"></div> Refresh';
-  await loadFeed();
-  btn.disabled = false;
-  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clip-rule="evenodd"/></svg> Refresh';
-}
-
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   document.getElementById('nav-' + name).classList.add('active');
   if (name === 'feed') loadFeed();
-}
-
-// Init — if URL has ?embed=1 show only the feed grid, no sidebar/setup
-const embedMode = urlParams.get('embed') === '1';
-if (embedMode) {
-  document.querySelector('.layout').innerHTML = `
-    <div style="width:100%;">
-      <div style="background:white;border-bottom:1px solid #efefef;padding:6px 4px;">
-        <div style="max-width:750px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
-          <button onclick="embedRefresh()" id="embedRefreshBtn" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:#333;color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clip-rule="evenodd"/></svg>
-            Refresh
-          </button>
-          <a href="${window.location.origin}" target="_blank" style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:#f1f1f1;color:#333;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit;text-decoration:none;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            Ajustes
-          </a>
-        </div>
-      </div>
-      <div style="height:1px;background:#efefef;"></div>
-      <div id="feedContent" style="max-width:750px;margin:0 auto;padding:0 4px;">
-        <div class="loading"><div class="spinner"></div>Loading...</div>
-      </div>
-    </div>`;
-  if (token && dbId) loadFeed();
-  else document.getElementById('feedContent').innerHTML = '<div style="padding:24px;color:#CB4810;font-size:14px;">⚠️ Missing token or database. Use the setup page to generate your embed link.</div>';
-}
-
-async function embedRefresh() {
-  const btn = document.getElementById('embedRefreshBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spin-sm"></div> Refresh';
-  await loadFeed();
-  btn.disabled = false;
-  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clip-rule="evenodd"/></svg> Refresh';
-} else if (token && dbId) {
-  showPage('feed');
-} else {
-  showPage('setup');
 }
 </script>
 </body>
