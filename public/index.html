@@ -256,9 +256,12 @@ document.getElementById('tokenInput').addEventListener('input', checkReady);
 document.getElementById('dbInput').addEventListener('input', checkReady);
 
 function extractDbId(input) {
-  const clean = input.replace(/-/g, '');
+  // Strip dashes and whitespace
+  const clean = input.trim().replace(/-/g, '');
+  // Match any 32-char hex string (Notion IDs)
   const m = clean.match(/([a-f0-9]{32})/i);
-  return m ? m[1] : '';
+  if (m) return m[1];
+  return '';
 }
 
 function fmt(d) {
