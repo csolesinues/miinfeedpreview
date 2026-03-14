@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        sorts: [{ property: 'Publish Date', direction: 'ascending' }],
+        sorts: [{ property: 'Publish Date', direction: 'descending' }],
         page_size: Number(limit)
       })
     });
