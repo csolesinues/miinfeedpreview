@@ -6,8 +6,23 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { token, dbId, limit = 18 } = req.body;
+  let { token, dbId, limit = 18 } = req.body;
   if (!token || !dbId) return res.status(400).json({ error: 'Missing token or dbId' });
+
+  // Clean up the dbId — accept full URLs or raw IDs, strip dashes
+  dbId = dbId.trim();
+  // If it's a URL, extract the ID part before any ?
+  if (dbId.includes('notion.so')) {
+    dbId = dbId.split('?')[0].split('/').pop();
+  }
+  // Remove dashes and any non-hex characters
+  dbId = dbId.replace(/-/g, '').replace(/[^a-f0-9]/gi, '');
+  // Take last 32 chars in case there's extra
+  if (dbId.length > 32) dbId = dbId.slice(-32);
+  // Re-add dashes in standard UUID format
+  if (dbId.length === 32) {
+    dbId = `${dbId.slice(0,8)}-${dbId.slice(8,12)}-${dbId.slice(12,16)}-${dbId.slice(16,20)}-${dbId.slice(20)}`;
+  }
 
   try {
     const response = await fetch(`https://api.notion.com/v1/databases/${dbId}/query`, {
@@ -19,7 +34,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         sorts: [{ property: 'Publish Date', direction: 'ascending' }],
-        page_size: limit
+        page_size: Number(limit)
       })
     });
 
