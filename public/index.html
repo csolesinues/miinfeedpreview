@@ -190,7 +190,12 @@
           </div>
 
           <div id="notionSteps" style="display:none;">
-            <div class="notion-steps-title">Add to Your Notion Page</div>
+            <div class="notion-steps-title" style="margin-bottom:10px;">Copy Your Widget URL</div>
+            <div style="display:flex;align-items:center;gap:8px;background:white;border:1px solid #e0e0e0;border-radius:10px;padding:10px 12px;margin-bottom:20px;">
+              <span id="widgetUrl" style="font-size:12px;color:#444;flex:1;word-break:break-all;font-family:monospace;"></span>
+              <button onclick="copyWidgetUrl()" style="padding:5px 12px;background:#272522;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit;" id="copyBtn">Copy</button>
+            </div>
+            <div class="notion-steps-title" style="margin-bottom:10px;">Add to Your Notion Page</div>
             <div class="notion-step"><span class="step-num">1</span>Type <strong>/embed</strong> in Notion</div>
             <div class="notion-step"><span class="step-num">2</span>Click "Embed link"</div>
             <div class="notion-step"><span class="step-num">3</span>Paste your widget URL</div>
@@ -221,15 +226,34 @@
 </div>
 
 <script>
+function extractDbId(input) {
+  // Strip dashes and whitespace
+  const clean = input.trim().replace(/-/g, '');
+  // Match any 32-char hex string (Notion IDs)
+  const m = clean.match(/([a-f0-9]{32})/i);
+  if (m) return m[1];
+  return '';
+}
+
 const TOKEN_KEY = 'feed_token';
 const DB_KEY = 'feed_db';
 let confirmed = false;
-let token = localStorage.getItem(TOKEN_KEY) || '';
-let dbId = localStorage.getItem(DB_KEY) || '';
+
+// Read token + dbId from URL params first, then localStorage
+const urlParams = new URLSearchParams(window.location.search);
+const urlToken = urlParams.get('token');
+const urlDb = urlParams.get('db');
+
+let token = urlToken || localStorage.getItem(TOKEN_KEY) || '';
+let dbId = urlDb ? extractDbId(urlDb) : (localStorage.getItem(DB_KEY) || '');
+
+// Save to localStorage if coming from URL
+if (urlToken) localStorage.setItem(TOKEN_KEY, urlToken);
+if (urlDb) localStorage.setItem(DB_KEY, extractDbId(urlDb));
 
 // Pre-fill saved values
 if (token) document.getElementById('tokenInput').value = token;
-if (dbId) document.getElementById('dbInput').value = dbId;
+if (dbId) document.getElementById('dbInput').value = urlDb || dbId;
 
 function toggleInstr(btn) {
   const d = btn.nextElementSibling;
@@ -255,14 +279,6 @@ function checkReady() {
 document.getElementById('tokenInput').addEventListener('input', checkReady);
 document.getElementById('dbInput').addEventListener('input', checkReady);
 
-function extractDbId(input) {
-  // Strip dashes and whitespace
-  const clean = input.trim().replace(/-/g, '');
-  // Match any 32-char hex string (Notion IDs)
-  const m = clean.match(/([a-f0-9]{32})/i);
-  if (m) return m[1];
-  return '';
-}
 
 function fmt(d) {
   if (!d) return '';
@@ -315,6 +331,9 @@ async function createWidget() {
     }).join('');
 
     document.getElementById('notionSteps').style.display = 'block';
+    // Generate personalised widget URL with token + db as params
+    const widgetUrl = window.location.origin + '?token=' + encodeURIComponent(t) + '&db=' + encodeURIComponent(d);
+    document.getElementById('widgetUrl').textContent = widgetUrl;
     btn.textContent = '✓ Widget Created!';
     btn.style.background = '#2d6a2d';
   } catch(e) {
@@ -323,6 +342,16 @@ async function createWidget() {
     btn.disabled = false;
     btn.innerHTML = 'Create Feed Widget <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
   }
+}
+
+function copyWidgetUrl() {
+  const url = document.getElementById('widgetUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.style.background = '#2d6a2d';
+    setTimeout(() => { btn.textContent = 'Copy'; btn.style.background = '#272522'; }, 2000);
+  });
 }
 
 async function loadFeed() {
