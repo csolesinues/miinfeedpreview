@@ -1,11 +1,8 @@
 {
   "name": "miin-feed-preview",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "node api/notion.js",
     "build": ""
-  },
-  "dependencies": {
-    "node-fetch": "^3.3.2"
   }
 }
