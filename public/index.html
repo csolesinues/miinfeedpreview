@@ -269,9 +269,9 @@ function fmt(d) {
   return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-// ── KEY CHANGE: calls /api/posts on own server instead of Notion directly ──
+// ── KEY CHANGE: calls /api/notion on own server instead of Notion directly ──
 async function callApi(t, d, limit) {
-  const res = await fetch('/api/posts', {
+  const res = await fetch('/api/notion', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token: t, dbId: d, limit })
