@@ -409,9 +409,36 @@ function showPage(name) {
 // Init — if URL has ?embed=1 show only the feed grid, no sidebar/setup
 const embedMode = urlParams.get('embed') === '1';
 if (embedMode) {
-  document.querySelector('.layout').innerHTML = '<div id="feedContent" style="max-width:750px;margin:0 auto;padding:0 4px;"><div class="loading"><div class="spinner"></div>Loading...</div></div>';
+  document.querySelector('.layout').innerHTML = `
+    <div style="width:100%;">
+      <div style="background:white;border-bottom:1px solid #efefef;padding:6px 4px;">
+        <div style="max-width:750px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
+          <button onclick="embedRefresh()" id="embedRefreshBtn" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:#333;color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clip-rule="evenodd"/></svg>
+            Refresh
+          </button>
+          <a href="${window.location.origin}" target="_blank" style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:#f1f1f1;color:#333;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit;text-decoration:none;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Ajustes
+          </a>
+        </div>
+      </div>
+      <div style="height:1px;background:#efefef;"></div>
+      <div id="feedContent" style="max-width:750px;margin:0 auto;padding:0 4px;">
+        <div class="loading"><div class="spinner"></div>Loading...</div>
+      </div>
+    </div>`;
   if (token && dbId) loadFeed();
   else document.getElementById('feedContent').innerHTML = '<div style="padding:24px;color:#CB4810;font-size:14px;">⚠️ Missing token or database. Use the setup page to generate your embed link.</div>';
+}
+
+async function embedRefresh() {
+  const btn = document.getElementById('embedRefreshBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin-sm"></div> Refresh';
+  await loadFeed();
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clip-rule="evenodd"/></svg> Refresh';
 } else if (token && dbId) {
   showPage('feed');
 } else {
